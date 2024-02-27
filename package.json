@@ -1,0 +1,36 @@
+{
+  "name": "nget",
+  "version": "1.0.0",
+  "description": "Node Get",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "ncc build src/index.ts --minify  && node copyfiles.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/star08-web/nget.git"
+  },
+  "author": "Star08-web",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/star08-web/nget/issues"
+  },
+  "homepage": "https://github.com/star08-web/nget#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.20",
+    "@types/serve-handler": "^6.1.4",
+    "@vercel/ncc": "^0.38.1",
+    "copy": "^0.3.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "colors": "^1.4.0",
+    "commander": "^12.0.0",
+    "easy-json-database": "^1.5.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "ora-classic": "^5.4.2"
+  }
+}
