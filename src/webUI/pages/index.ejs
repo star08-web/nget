@@ -14,6 +14,8 @@
                 <li class="uk-active"><a>Nget Web UI</a></li>
                 <li class="uk-parent"><a href="/"><span uk-icon="download"></span> Download Manager</a></li>
                 <li><a href="/about"><span uk-icon="info"></span> About Nget</a></li>
+                <li></li>
+                <li></li>
             </ul>
         </div>
     </nav>
@@ -21,9 +23,61 @@
     <br>
     <br>
     <div class="uk-container">
+        <h3>Actions</h3>
+        <div class="uk-container">
+            <button id="new" class="uk-button uk-button-primary"><span uk-icon="plus-circle"></span> New Download</button>
+            <button id="erase" class="uk-button uk-button-danger"><span uk-icon="trash"></span> Erase History</button>
+        </div>
+        <br>
+        <br>
         <h1>Your Downloads</h1>
+        <div class="downloads uk-container" id="dl-container">
+            <h3 id="empty">Hmm... it's a bit empty here... why don't you download something?</h3>
+        </div>
     </div>
 </body>
+    <script src="js/uikit-icons.js"></script>
+    <script src="js/uikit.js"></script>
     <script src="js/uikit-icons.min.js"></script>
     <script src="js/uikit.min.js"></script>
+    <script>
+        const newBtn = document.getElementById('new');
+        const eraseBtn = document.getElementById('erase');
+        document.addEventListener('DOMContentLoaded', async function() {
+            await fetch('/api/history')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        document.getElementById('empty').style.display = 'block';
+                    } else {
+                        document.getElementById('empty').style.display = 'none';
+                        data.forEach(dl => {
+                        let dlDiv = document.createElement('div');
+                        dlDiv.classList.add('uk-card', 'uk-card-default', 'uk-card-body');
+                        dlDiv.innerHTML = `
+                            <h3 class="uk-card-title">${dl.title}</h3>
+                            <p>Url: ${dl.url}</p>
+                            <p>Path: ${dl.output}</p>
+                            <p>Size: ${dl.size} MB</p>
+                            <p>Date: ${dl.date}</p>
+                        `;
+                        document.getElementById('dl-container').appendChild(dlDiv);
+                    });
+                }
+                });
+        });
+        eraseBtn.addEventListener('click', async function() {
+            if (confirm('Are you sure you want to erase your download history?') == false) {
+                return;
+            } else {
+                await fetch('/api/history', {
+                method: 'DELETE'
+            });
+            window.location.reload();
+        }     
+        });
+        newBtn.addEventListener('click', async function() {
+            
+        });
+    </script>
 </html>
