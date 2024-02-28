@@ -46,11 +46,22 @@ export default async function dl(url: string, output: string, allowUnsafe: boole
         });
     } catch (err:any) {
         spinner.fail('Failed to download file :(');
-        if (err.code === 'DEPTH_ZERO_SELF_SIGNED_CERT' || err.code === 'ECONNREFUSED') {
+        if (err.code === 'DEPTH_ZERO_SELF_SIGNED_CERT') {
             console.log('Error: Self signed certificates are not allowed by default');
             console.log('Try using --allow-unsafe to allow unsafe downloads');
         } else {
             console.log(`Error: ${err.message}`);
         }
+    }
+}
+export async function dlAPI(url: string, output: string, allowUnsafe: boolean) {
+    if (!url.startsWith('https://') && !allowUnsafe) {
+        return {status: 1, message: 'Unsafe downloads aren\'t allowed. check allow-unsafe flag'};
+    }
+    let axiosagent = null;
+    if (allowUnsafe){
+        axiosagent = new https.Agent({ rejectUnauthorized: false })
+    } else {
+        axiosagent = new https.Agent({ rejectUnauthorized: true });
     }
 }

@@ -1,10 +1,13 @@
 {
-  "name": "nget",
+  "name": "@star08-web/nget",
   "version": "1.0.0",
-  "description": "Node Get",
-  "main": "src/index.ts",
+  "description": "a simple tool to download files from the internet",
+  "bin": {
+    "nget": "dist/index.js"
+  },
+  "source": "src/index.ts",
   "scripts": {
-    "build": "ncc build src/index.ts --minify  && node copyfiles.js"
+    "build": "tsc -p . && node copyfiles.js && npm pack"
   },
   "repository": {
     "type": "git",
@@ -19,13 +22,13 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.20",
-    "@types/serve-handler": "^6.1.4",
-    "@vercel/ncc": "^0.38.1",
     "copy": "^0.3.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "appdata-path": "^1.0.0",
     "axios": "^1.6.7",
+    "body-parser": "^1.20.2",
     "colors": "^1.4.0",
     "commander": "^12.0.0",
     "easy-json-database": "^1.5.1",

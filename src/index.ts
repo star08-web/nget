@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 import { Command } from 'commander';
 import dl from './dl-cli';
 import webUI from './webui';
@@ -25,6 +26,33 @@ program.command('webUI')
       process.chdir(__dirname);
       const port = options.port || 8080;
       webUI(port);
+})
+
+program.command('history')
+    .description('View and manage the download history')
+    .option('-c, --clear', 'Clear the download history')
+    .action(async function(options) {
+      const history = require('./history');
+      if (options.clear) {
+        history.clear();
+        console.log('History cleared');
+        return;
+      }
+      console.log('History:');
+      console.log('========');
+      console.log();
+      const downloads = history.get(); 
+      if (downloads.length === 0) {
+        console.log('Oh, wow... such an empty history! maybe you should download something ¯\\_(ツ)_/¯');
+        return;
+      }
+      downloads.forEach((item: any) => {
+        console.log(`File: ${item.title}`);
+        console.log(`URL: ${item.url}`);
+        console.log(`Output: ${item.output}`);
+        console.log(`Size: ${item.size} bytes`);
+        console.log();
+      });
 })
 
 program.parse();

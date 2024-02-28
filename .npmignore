@@ -1,0 +1,7 @@
+node_modules/
+src/
+copyfiles.js
+tsconfig.json
+tsconfig.tsbuildinfo
+.gitattributes
+*.tgz

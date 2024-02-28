@@ -1,7 +1,13 @@
 import EasyJsonDB from "easy-json-database";
 import path from "path";
+import getAppDataPath from "appdata-path";
+const hpath = getAppDataPath("star08-web/nget");
+import {existsSync, mkdirSync} from "fs";
+if (!existsSync(hpath)) {
+  mkdirSync(hpath, {recursive: true});
+}
 const database = EasyJsonDB;
-const db = new database(path.join(__dirname, "history.json"));
+const db = new database(path.join(hpath, "history.json"));
 if (!db.has("history")) {
   db.set("history", []);
 }

@@ -2,12 +2,14 @@ import { green } from 'colors';
 import express from 'express';
 import path from 'path';
 import * as history from './history';
+import bodyParser from 'body-parser';
 const getIp = require('get-ip');
 
 export default function webui(port: number) {
     const app = express();
     app.set('view engine', 'ejs');
     app.set('views', path.join(__dirname, 'webUI', 'pages'))
+    app.use(bodyParser.json());
     app.use(express.static(path.join(__dirname, 'webUI', 'public')));
     app.get('/', (req, res) => {
         res.render('index')
@@ -27,7 +29,9 @@ export default function webui(port: number) {
             res.status(500).json({ error: 'Failed to clear history' });
         }
     });
-    
+    app.post('/api/createdl', express.json(), (req, res) => {
+        
+    });
     app.listen(port, () => {
     const iplist = getIp(); 
         console.log(`
