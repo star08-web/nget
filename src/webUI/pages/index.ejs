@@ -130,6 +130,12 @@
                     document.getElementById('dlnew').style.display = 'none';
                     document.getElementById('dl-container').style.display = 'block';
                 });
+                socket.on('dlinprg', function() {
+                    newBtn.setAttribute('disabled', true);
+                });
+                socket.on('dldone', function() {
+                    newBtn.removeAttribute('disabled');
+                });
         });
     </script>
 </html>

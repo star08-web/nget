@@ -56,20 +56,23 @@ export default function webui(port: number, folder: string) {
             response.data.on('data', (chunk: Buffer) => {
             downloadedBytes += chunk.length;
             const dlPercentage = Math.round((downloadedBytes / totalBytes) * 100);
-                io.emit('status', 'Downloading...')
-                io.emit('filename', path.basename(url));
-                io.emit('size', totalBytes);
-                io.emit('progress', dlPercentage);
+            io.emit('dlinprg')
+            io.emit('status', 'Downloading...')
+            io.emit('filename', path.basename(url));
+            io.emit('size', totalBytes);
+            io.emit('progress', dlPercentage);
             });
             await new Promise((resolve, reject) => {
                 writer.on('finish', () => {
                     io.emit('status', 'Downloaded file successfully :)');
                     history.add(path.basename(url), url, output_2, totalBytes);
                     io.emit('RDRSCSS')
+                    io.emit('dldone')
                     resolve(NaN);
                 });
                 writer.on('error', (err: any) => {
                     io.emit('err', `writerError: ${err.message}`);
+                    io.emit('dldone')
                     reject(err);
                 });
             });
