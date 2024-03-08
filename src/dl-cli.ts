@@ -37,7 +37,7 @@ export default async function dl(url: string, output: string, allowUnsafe: boole
             writer.on('finish', () => {
                 spinner.succeed('Downloaded file successfully :)');
                 history.add(path.basename(url), url, output, totalBytes);
-                resolve;
+                resolve(NaN);
             });
             writer.on('error', (err: any) => {
                 spinner.fail('Failed to download file :(');
@@ -52,16 +52,5 @@ export default async function dl(url: string, output: string, allowUnsafe: boole
         } else {
             console.log(`Error: ${err.message}`);
         }
-    }
-}
-export async function dlAPI(url: string, output: string, allowUnsafe: boolean) {
-    if (!url.startsWith('https://') && !allowUnsafe) {
-        return {status: 1, message: 'Unsafe downloads aren\'t allowed. check allow-unsafe flag'};
-    }
-    let axiosagent = null;
-    if (allowUnsafe){
-        axiosagent = new https.Agent({ rejectUnauthorized: false })
-    } else {
-        axiosagent = new https.Agent({ rejectUnauthorized: true });
     }
 }

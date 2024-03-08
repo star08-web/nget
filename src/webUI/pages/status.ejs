@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Status</title>
+    <link rel="stylesheet" href="/css/uikit.min.css">
+</head>
+<body>
+    <div class="uk-container">
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <h1 id="stat">Status: Idle</h1>
+        <p id="stat-dsc">Heyo there, the server is chill right now</p>
+        <p id="stat-filesize">if you are trying to download something now, the server have problems with the Socket.io connection, please try again later</p>
+        <progress class="uk-progress" id="stat-dl-prg" max="100" value="0"></progress>
+        <p id="stat-dl-prg-txt"></p>
+        <br>
+        <br>
+        <br>
+        <br>
+        <h5 id="address"></h5>
+    </div>
+</body>
+    <script src="/js/uikit-icons.js"></script>
+    <script src="/js/uikit.js"></script>
+    <script src="/js/socket.io.min.js"></script>
+    <script src="/js/uikit-icons.min.js"></script>
+    <script>
+        const socket = io();
+        document.getElementById('address').textContent = `To get back on this page just go to the following address: ${window.location.href}`
+        socket.on('status', function(data){
+            document.getElementById('stat').textContent = "Status: " + data
+        });
+        socket.on('filename', function(data){
+            document.getElementById('stat-dsc').textContent = data
+        });
+        socket.on('size', function(data){
+            document.getElementById('stat-filesize').textContent = data + " Bytes"
+        });
+        socket.on('progress', function(data){
+            document.getElementById('stat-dl-prg').value = data
+            document.getElementById('stat-dl-prg-txt').textContent = data + "%"
+        });
+        socket.on('err', function(data){
+            alert(data)
+        });
+        socket.on('RDRSCSS', function(){
+            window.location.replace('/')
+        });
+    </script>
+</html>

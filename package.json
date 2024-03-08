@@ -35,6 +35,7 @@
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "get-ip": "^2.0.0",
-    "ora-classic": "^5.4.2"
+    "ora-classic": "^5.4.2",
+    "socket.io": "^4.7.4"
   }
 }

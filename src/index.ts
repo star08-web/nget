@@ -3,8 +3,9 @@ import { Command } from 'commander';
 import dl from './dl-cli';
 import webUI from './webui';
 import path from 'path';
-
-const program = new Command();
+import getAppDataPath from "appdata-path"
+import { existsSync, mkdirSync } from 'fs';
+const program = new Command()
 program
   .name('nget')
   .description('A simple tool to download files from the internet \\ (•◡•) /')
@@ -18,14 +19,20 @@ program.command('get')
     .action(async function(url, options) {
       dl(url, options.output || path.join(process.cwd(), path.basename(url)), options.allowUnsafe || false);
 })
+const webui_folder_template = getAppDataPath('star08-web/nget/downloads');
+if (!existsSync(webui_folder_template)) {
+  mkdirSync(webui_folder_template, { recursive: true });
+} 
 
 program.command('webUI')
     .description('Open the web UI to use Nget remotely')
     .option('-p, --port <port>', 'Port to run the server on')
+    .option('--folder <folder>', `Folder to store the downloaded files (defaults to: ${webui_folder_template})`)
     .action(async function(options) {
       process.chdir(__dirname);
       const port = options.port || 8080;
-      webUI(port);
+      const folder = options.folder || webui_folder_template;
+      webUI(port, folder);
 })
 
 program.command('history')

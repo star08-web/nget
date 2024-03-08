@@ -35,36 +35,38 @@
             <h3 id="empty">Hmm... it's a bit empty here... why don't you download something?</h3>
         </div>
     </div>
+
     <div class="dlnew-bg uk-container" id="dlnew" style="display: none;">
         <div class="uk-card uk-card-default uk-card-body">
             <h3 class="uk-card-title">New Download</h3>
-            <form>
-                <div class="uk-margin">
-                    <label for="url"><span uk-icon="link"></span> URL</label>
-                    <input class="uk-input" type="text" placeholder="Insert the file URL" name="url" id="url" required>
-                    <label for="allowunsafe"><span uk-icon="unlock"></span> Allow unsafe Download</label>
-                    <input class="uk-checkbox" type="checkbox" name="unsafeDL" id="allowunsafe">
-                </div>
-                <div class="uk-margin">
-                    <label for="output"><span uk-icon="file-text"></span> File Name</label>
-                    <input class="uk-input" type="text" placeholder="Insert file name (if not set the base file URL will be used)" name="output" id="output">
-                </div>
-                <button class="uk-button uk-button-primary" id="start-dl"><span uk-icon="cloud-download"></span> Download</button>
-                <button class="uk-button uk-button-secondary" id="abort-btn"><span uk-icon="close"></span> Abort</button>
-            </form>
+            <div class="uk-margin">
+                <label for="url"><span uk-icon="link"></span> URL</label>
+                <input class="uk-input" type="url" placeholder="Insert the file URL" name="url" id="url" required>
+                <label for="allowunsafe"><span uk-icon="unlock"></span> Allow unsafe Download</label>
+                <input class="uk-checkbox" type="checkbox" name="unsafeDL" id="allowunsafe">
+            </div>
+            <div class="uk-margin">
+                <label for="output"><span uk-icon="file-text"></span> File Name</label>
+                <input class="uk-input" type="text" placeholder="Insert file name (if not set the base file URL will be used)" name="output" id="output">
+            </div>
+            <button class="uk-button uk-button-primary" id="start-dl"><span uk-icon="cloud-download"></span> Download</button>
+            <button class="uk-button uk-button-secondary" id="abort-btn"><span uk-icon="close"></span> Abort</button>
         </div>
     </div>
-</body>
+
     <script src="js/uikit-icons.js"></script>
     <script src="js/uikit.js"></script>
+    <script src="js/socket.io.min.js"></script>
     <script src="js/uikit-icons.min.js"></script>
-    <script src="js/uikit.min.js"></script>
     <script>
-        const newBtn = document.getElementById('new');
-        const eraseBtn = document.getElementById('erase');
-        const abort_btn = document.getElementById('abort-btn'); 
-        const start_dl = document.getElementById('start-dl');
         document.addEventListener('DOMContentLoaded', async function() {
+            const newBtn = document.getElementById('new');
+            const eraseBtn = document.getElementById('erase');
+            const abortBtn = document.getElementById('abort-btn'); 
+            const progDiv = document.getElementById('dlprog');
+            const startbtn = document.getElementById('start-dl');
+            const socket = io(); 
+
             await fetch('/api/history')
                 .then(res => res.json())
                 .then(data => {
@@ -73,54 +75,61 @@
                     } else {
                         document.getElementById('empty').style.display = 'none';
                         data.forEach(dl => {
-                        let dlDiv = document.createElement('div');
-                        dlDiv.classList.add('uk-card', 'uk-card-default', 'uk-card-body');
-                        dlDiv.innerHTML = `
-                            <h3 class="uk-card-title">${dl.title}</h3>
-                            <p>Url: ${dl.url}</p>
-                            <p>Path: ${dl.output}</p>
-                            <p>Size: ${dl.size} MB</p>
-                            <p>Date: ${dl.date}</p>
-                        `;
-                        document.getElementById('dl-container').appendChild(dlDiv);
+                            let dlDiv = document.createElement('div');
+                            dlDiv.classList.add('uk-card', 'uk-card-default', 'uk-card-body');
+                            dlDiv.innerHTML = `
+                                <h3 class="uk-card-title">${dl.title}</h3>
+                                <p>Url: ${dl.url}</p>
+                                <p>Path: ${dl.output}</p>
+                                <p>Size: ${dl.size} Bytes</p>
+                                <p>Date: ${dl.date}</p>
+                            `;
+                            document.getElementById('dl-container').appendChild(dlDiv);
+                        });
+                    }
+                });
+
+                startbtn.addEventListener('click', async function(){
+                    let url = document.getElementById('url').value;
+                    let output = document.getElementById('output').value;
+                    let unsafeDL = document.getElementById('allowunsafe').checked;
+                    let data = {
+                        url: url,
+                        output: output,
+                        allowUnsafe: unsafeDL
+                    };
+                    fetch('/api/newDL', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
                     });
-                }
+                    socket.once('newdl-gotit', function() {
+                        window.location.replace('/api/currentstatus');
+                    });
+                });
+
+                eraseBtn.addEventListener('click', async function() {
+                    if (confirm('Are you sure you want to erase your download history?') == false) {
+                        return;
+                    } else {
+                        await fetch('/api/history', {
+                            method: 'DELETE'
+                        });
+                        window.location.reload();
+                    }     
+                });
+
+                newBtn.addEventListener('click', async function() {
+                    document.getElementById('dlnew').style.display = 'block';
+                    document.getElementById('dl-container').style.display = 'none';
+                });
+
+                abortBtn.addEventListener('click', async function() {
+                    document.getElementById('dlnew').style.display = 'none';
+                    document.getElementById('dl-container').style.display = 'block';
                 });
         });
-        eraseBtn.addEventListener('click', async function() {
-            if (confirm('Are you sure you want to erase your download history?') == false) {
-                return;
-            } else {
-                await fetch('/api/history', {
-                method: 'DELETE'
-            });
-            window.location.reload();
-        }     
-        });
-        newBtn.addEventListener('click', async function() {
-            document.getElementById('dlnew').style.display = 'block';
-            document.getElementById('dl-container').style.display = 'none';
-        });
-        abort_btn.addEventListener('click', async function() {
-            document.getElementById('dlnew').style.display = 'none';
-            document.getElementById('dl-container').style.display = 'block';
-        });
-        start_dl.addEventListener('click', async function(){
-            const url = document.getElementById('url').value;
-            const output = document.getElementById('output').value;
-            const unsafeDL = document.getElementById('allowunsafe').checked;
-            await fetch('/api/download', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    url,
-                    output,
-                    unsafeDL
-                })
-            });
-            window.location.reload();
-        })
     </script>
 </html>
