@@ -10,6 +10,8 @@ import axios from 'axios';
 import https from 'https';
 const getIp = require('get-ip');
 
+const rootFolder:string = path.join(__dirname, '..');
+
 export default function webui(port: number, folder: string) {
     process.chdir(folder);
     const app = express();
@@ -19,6 +21,8 @@ export default function webui(port: number, folder: string) {
     app.set('views', path.join(__dirname, 'webUI', 'pages'))
     app.use(bodyParser.json());
     app.use(express.static(path.join(__dirname, 'webUI', 'public')));
+    app.use(express.static(path.join(rootFolder, 'node_modules', 'socket.io', 'client-dist')));
+    app.use(express.static(path.join(rootFolder, 'node_modules', 'uikit', 'dist')));
 
     app.get('/', (req, res) => {
         res.render('index');

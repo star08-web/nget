@@ -13,12 +13,27 @@ if (!db.has("history")) {
 }
 
 export function get(){
-  const historyData = db.get("history");
-  return historyData;
+  const historyData:object[] = Object(db.get("history"));
+  const elements:object[] = [];
+  historyData.forEach((element: any) => {
+    if (existsSync(element.output)) {
+      elements.push(element);
+    } else {
+      element.output = element.output + " [Missing]";
+      elements.push(element);
+    }
+  })
+  return elements;
 }
 
 export function add(title:string, url: string, output: string, size: number) {
-  db.push("history", {title: title, url: url, output: output, size: size, date: new Date().toLocaleString()});
+  db.push("history", {
+      title: title,
+      url: url, 
+      output: output, 
+      size: size, 
+      date: new Date().toLocaleString()
+    });
 }
 
 export function clear() {

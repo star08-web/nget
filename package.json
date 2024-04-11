@@ -1,7 +1,7 @@
 {
   "name": "@star08-w3b/nget",
-  "version": "1.0.0",
-  "description": "a simple tool to download files from the internet",
+  "version": "1.0.1",
+  "description": "Download files with style",
   "bin": {
     "nget": "dist/index.js"
   },
@@ -36,6 +36,7 @@
     "express": "^4.18.2",
     "get-ip": "^2.0.0",
     "ora-classic": "^5.4.2",
-    "socket.io": "^4.7.4"
+    "socket.io": "^4.7.4",
+    "uikit": "^3.19.4"
   }
 }

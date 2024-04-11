@@ -1,6 +1,9 @@
-# nget
+![logotext.png](https://i.postimg.cc/7LWXqT49/logotext.png)
 
-A simple tool to download files from the internet.
+
+[![npm](https://img.shields.io/npm/v/@star08-w3b/nget)](https://www.npmjs.com/package/@star08-w3b/nget)
+[![GitHub](https://img.shields.io/github/license/star08-web/nget)](https://www.github.com/star08-web/nget)
+
 
 ### installation
 

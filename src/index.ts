@@ -6,6 +6,9 @@ import path from 'path';
 import getAppDataPath from "appdata-path"
 import { existsSync, mkdirSync } from 'fs';
 const program = new Command()
+
+
+
 program
   .name('nget')
   .description('A simple tool to download files from the internet \\ (•◡•) /')
