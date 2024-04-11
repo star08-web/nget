@@ -1,6 +1,6 @@
 {
   "name": "@star08-w3b/nget",
-  "version": "1.0.1",
+  "version": "1.0.1-a",
   "description": "Download files with style",
   "bin": {
     "nget": "dist/index.js"
