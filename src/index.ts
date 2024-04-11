@@ -12,7 +12,7 @@ const program = new Command()
 program
   .name('nget')
   .description('A simple tool to download files from the internet \\ (•◡•) /')
-  .version('Nget Version 1.0.0 (STABLE)');
+  .version('Nget Version 1.0.1 (STABLE)');
 
 program.command('get')
     .description('Download a file from the internet')
