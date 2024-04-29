@@ -5,8 +5,9 @@ const endpoint:string = 'https://api.github.com/repos/star08-web/nget/releases/l
 export default async function cfu(fromver:string) {
     const { data } = await axios.get(endpoint);
     const prerelease:boolean = data.prerelease;
-    const latest:string = data.tag_name;
-    if (latest !== fromver && !prerelease) {
+    const latest:string = data.tag_name.replace(/-/g, '');
+    const fromVersion:string = fromver.replace(/-/g, '');
+    if (latest.includes(fromVersion) && !prerelease) {
         console.log(`New version available: ${latest}`);
         console.log('Please update by running `npm i -g nget`');
         console.log();
