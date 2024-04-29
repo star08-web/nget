@@ -23,8 +23,8 @@
     <br>
     <div class="uk-container">
         <img src="img/logotext.png" alt="Nget">
-        <p style="font-size: larger;">version 1.0.1</p>
-        <p style="color: green; font-size: larger;">[stable]</p>
+        <p style="font-size: larger;">version <%=version %></p>
+        <p id="statustext" style="color: green; font-size: larger;">[<%=status %>]</p>
         <p>
             Nget is a simple download manager that can be used to download files from the internet. 
             <br>
@@ -50,4 +50,18 @@
     <script src="js/uikit.js"></script>
     <script src="js/uikit-icons.min.js"></script>
     <script src="js/uikit.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const status = document.getElementById('statustext');
+            if (status.textContent === "[Non-Production]") {
+                status.style.color = "orange";
+                UIkit.notification({
+                    message: "<span uk-icon='warning'></span> This is a non production version of Nget. It may contain bugs and issues. Use at your own risk.",
+                    status: "warning",
+                    pos: "top-right",
+                    timeout: 5000
+                })
+            } 
+        })
+    </script>
 </html>

@@ -12,7 +12,7 @@ const getIp = require('get-ip');
 
 const rootFolder:string = path.join(__dirname, '..');
 
-export default function webui(port: number, folder: string) {
+export default function webui(port: number, folder: string, isbeta: boolean = false, version: string = '0.0.0') {
     process.chdir(folder);
     const app = express();
     const server = createServer(app);
@@ -91,7 +91,8 @@ export default function webui(port: number, folder: string) {
     })
 
     app.get('/about', (req, res) => {
-        res.render('about');
+        const stat:string = isbeta ? 'Non-Production' : 'Stable';
+        res.render('about', { "status":stat, "version":version });
     });
 
     app.get('/api/history', (req, res) => {
