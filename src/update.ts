@@ -7,7 +7,7 @@ export default async function cfu(fromver:string) {
     const prerelease:boolean = data.prerelease;
     const latest:string = data.tag_name.replace(/-/g, '');
     const fromVersion:string = fromver.replace(/-/g, '');
-    if (latest.includes(fromVersion) && !prerelease) {
+    if (!latest.includes(fromVersion) && !prerelease) {
         console.log(`New version available: ${latest}`);
         console.log('Please update by running `npm i -g nget`');
         console.log();
