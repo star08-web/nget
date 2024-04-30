@@ -9,7 +9,7 @@ export default async function cfu(fromver:string) {
     const fromVersion:string = fromver.replace(/-/g, '');
     if (!latest.includes(fromVersion) && !prerelease) {
         console.log(`New version available: ${latest}`);
-        console.log('Please update by running `npm i -g nget`');
+        console.log('Please update by running `npm i -g @star08-w3b/nget`');
         console.log();
     }
 }
